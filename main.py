@@ -3,7 +3,9 @@ import matplotlib.pyplot as plt
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import ComplementNB
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
+from sklearn import preprocessing
 
 # reading train data from file
 # and transforming it into the desired format
@@ -56,7 +58,8 @@ test_inputs = np.array(test_inputs)
 input_file.close()
 
 # convert string input to vectors, using features of sklearn library
-vectorizer = CountVectorizer(max_df=0.9)
+#vectorizer = CountVectorizer()
+vectorizer = TfidfVectorizer()
 vectorizer.fit(training_input)
 
 training_input_vectorized = vectorizer.transform(training_input)
@@ -72,28 +75,33 @@ test_inputs_vectorized = vectorizer.transform(test_inputs)
 
 ### COMPLEMENTAL NATIVE BAYES
 
-#NBModel = ComplementNB()
-#NBModel.fit(training_input_vectorized, training_labels)
+NBModel = ComplementNB()
+NBModel.fit(training_input_vectorized, training_labels)
 #prediction = NBModel.predict(test_inputs_vectorized)
-#precision = NBModel.score(validation_inputs_vectorized, validation_labels)
+precision = NBModel.score(validation_inputs_vectorized, validation_labels)
 
 ### SUPPORT VECTOR MACHINES
 
-SVCModel = SVC(kernel='linear', gamma='scale', shrinking=True)
-SVCModel.fit(training_input_vectorized, training_labels)
-prediction = SVCModel.predict(test_inputs_vectorized)
+#validation_inputs_vectorized = scaler.transform(validation_inputs_vectorized)
+
+# SVCModel = SVC(kernel='linear', gamma='scale', shrinking=True)
+# SVCModel.fit(training_input_vectorized, training_labels)
+# prediction = SVCModel.predict(test_inputs_vectorized)
+# precision = SVCModel.score(validation_inputs_vectorized, validation_labels)
+
+print(precision)
 
 # output to some file
 
-output_file = open("output/output_file.txt", "w", encoding="utf-8")
-output_file.write("id,label\n")
-
-for i in range(len(prediction)):
-   output_file.write(test_Ids[i] + ',' + str(prediction[i]))
-   if i < len(prediction) - 1:
-       output_file.write('\n')
-
-output_file.close()
+# output_file = open("output/output_file.txt", "w", encoding="utf-8")
+# output_file.write("id,label\n")
+#
+# for i in range(len(prediction)):
+#    output_file.write(test_Ids[i] + ',' + str(prediction[i]))
+#    if i < len(prediction) - 1:
+#        output_file.write('\n')
+#
+# output_file.close()
 
 
 
