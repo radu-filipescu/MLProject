@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import ComplementNB
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.svm import SVC
 
 # reading train data from file
 # and transforming it into the desired format
@@ -53,11 +55,9 @@ for i in range(len(test_inputs)):
 test_inputs = np.array(test_inputs)
 input_file.close()
 
-# MultinomialNB expects numerical values, so we
 # convert string input to vectors, using features of sklearn library
-vectorizer = CountVectorizer()
+vectorizer = CountVectorizer(max_df=0.9)
 vectorizer.fit(training_input)
-
 
 training_input_vectorized = vectorizer.transform(training_input)
 validation_inputs_vectorized = vectorizer.transform(validation_inputs)
@@ -65,13 +65,27 @@ test_inputs_vectorized = vectorizer.transform(test_inputs)
 
 ### MULTINOMIAL NATIVE BAYES
 
-NBModel = MultinomialNB()
-NBModel.fit(training_input_vectorized, training_labels)
-prediction = NBModel.predict(test_inputs_vectorized)
+#NBModel = MultinomialNB()
+#NBModel.fit(training_input_vectorized, training_labels)
+#prediction = NBModel.predict(test_inputs_vectorized)
 #precision = NBModel.score(validation_inputs_vectorized, validation_labels)
 
-output_file = open("output/output_file.txt", "w", encoding="utf-8")
+### COMPLEMENTAL NATIVE BAYES
 
+#NBModel = ComplementNB()
+#NBModel.fit(training_input_vectorized, training_labels)
+#prediction = NBModel.predict(test_inputs_vectorized)
+#precision = NBModel.score(validation_inputs_vectorized, validation_labels)
+
+### SUPPORT VECTOR MACHINES
+
+SVCModel = SVC(kernel='linear', gamma='scale', shrinking=True)
+SVCModel.fit(training_input_vectorized, training_labels)
+prediction = SVCModel.predict(test_inputs_vectorized)
+
+# output to some file
+
+output_file = open("output/output_file.txt", "w", encoding="utf-8")
 output_file.write("id,label\n")
 
 for i in range(len(prediction)):
