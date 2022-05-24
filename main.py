@@ -59,9 +59,10 @@ test_inputs = np.array(test_inputs)
 input_file.close()
 
 # convert string input to vectors, using features of sklearn library
-vectorizer = CountVectorizer(analyzer="char", ngram_range=(1,8))
-#vectorizer = TfidfVectorizer(analyzer="char", ngram_range=(1,8))
+vectorizer = CountVectorizer(analyzer="char", ngram_range=(1, 1))
+#vectorizer = TfidfVectorizer(analyzer="word", ngram_range=(1, 1), max_df=0.7)
 vectorizer.fit(training_input)
+
 
 training_input_vectorized = vectorizer.transform(training_input)
 validation_inputs_vectorized = vectorizer.transform(validation_inputs)
@@ -69,23 +70,31 @@ test_inputs_vectorized = vectorizer.transform(test_inputs)
 
 ### CATEGORICAL NATIVE BAYES
 NBModel1 = BernoulliNB()
-NBModel1.fit(training_input_vectorized, training_labels)
+#NBModel1.fit(training_input_vectorized, training_labels)
 #prediction1 = NBModel1.predict(test_inputs_vectorized)
 #precision = NBModel1.score(validation_inputs_vectorized, validation_labels)
 
 ### MULTINOMIAL NATIVE BAYES
 NBModel2 = MultinomialNB()
-NBModel2.fit(training_input_vectorized, training_labels)
+#NBModel2.fit(training_input_vectorized, training_labels)
 #prediction2 = NBModel2.predict(test_inputs_vectorized)
 #precision = NBModel2.score(validation_inputs_vectorized, validation_labels)
 
 ### COMPLEMENTAL NATIVE BAYES
 NBModel3 = ComplementNB()
-NBModel3.fit(training_input_vectorized, training_labels)
-prediction3 = NBModel3.predict(test_inputs_vectorized)
-precision = NBModel3.score(validation_inputs_vectorized, validation_labels)
+#NBModel3.fit(training_input_vectorized, training_labels)
+#prediction3 = NBModel3.predict(test_inputs_vectorized)
+#precision = NBModel3.score(validation_inputs_vectorized, validation_labels)
 
-print(precision)
+### SUPPORT VECTOR MACHINES
+
+SVCModel = SVC(kernel='linear')
+SVCModel.fit(training_input_vectorized, training_labels)
+#prediction4 = SVCModel.predict(test_inputs_vectorized)
+#precision = SVCModel.score(validation_inputs_vectorized, validation_labels)
+
+
+#print(precision)
 
 # final_prediction = []
 # for i in range(len(prediction1)):
@@ -103,19 +112,19 @@ print(precision)
 #     else:
 #         final_prediction.append(3)
 
-prediction = prediction3
-
-# output to some file
-
-output_file = open("output/output_file.txt", "w", encoding="utf-8")
-output_file.write("id,label\n")
-
-for i in range(len(prediction)):
-   output_file.write(test_Ids[i] + ',' + str(prediction[i]))
-   if i < len(prediction) - 1:
-       output_file.write('\n')
-
-output_file.close()
+# prediction = prediction3
+#
+# # output to some file
+#
+# output_file = open("output/output_file.txt", "w", encoding="utf-8")
+# output_file.write("id,label\n")
+#
+# for i in range(len(prediction)):
+#    output_file.write(test_Ids[i] + ',' + str(prediction[i]))
+#    if i < len(prediction) - 1:
+#        output_file.write('\n')
+#
+# output_file.close()
 
 
 
